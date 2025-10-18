@@ -1,0 +1,20 @@
+---
+- name: Check installed gpg version
+  block:
+    - name: Get installed gpg version
+      ansible.builtin.command:
+        cmd: "gpg --version"
+      environment:
+        PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+      ignore_errors: true
+      changed_when: false
+      failed_when: false
+      register: gpg_installed_version_cmd
+
+    - name: Extract only the version into a variable
+      ansible.builtin.set_fact:
+        gpg_installed_version: "{{ (gpg_installed_version_cmd.stdout | regex_search('.*?([\\d.]{2,})', '\\1'))[0] | default('') }}"
+
+    - name: Debug installed gpg version
+      ansible.builtin.debug:
+        var: gpg_installed_version

@@ -1,0 +1,99 @@
+---
+gpg_install_method: "package"
+gpg_force_install: false
+
+gpg_config_dir: "{{ ansible_env.HOME }}/.gnupg"
+gpg_config_file: "{{ gpg_config_dir }}/gpg.conf"
+gpg_agent_config_file: "{{ gpg_config_dir }}/gpg-agent.conf"
+
+# =============================================================================
+# KEYSERVER & KEY DISCOVERY
+# =============================================================================
+gpg_keyserver: "hkps://keys.openpgp.org" # Use encrypted keyserver connection
+gpg_auto_key_retrieve: false # Automatically retrieve missing keys
+gpg_auto_key_locate: # Key discovery methods (in order)
+  - "local" # Check local keyring first
+  - "wkd" # Web Key Directory (most authentic)
+  - "keyserver" # Fallback to keyserver
+gpg_keyserver_options: # Keyserver security options
+  - "no-honor-keyserver-url" # Ignore keyserver URLs in keys (security)
+
+# =============================================================================
+# CRYPTOGRAPHIC ALGORITHMS
+# =============================================================================
+# Cipher, digest, and compression preferences (strongest first)
+gpg_personal_cipher_preferences: "AES256 AES192 AES"
+gpg_personal_digest_preferences: "SHA512 SHA384 SHA256"
+gpg_personal_compress_preferences: "ZLIB ZIP Uncompressed"
+gpg_default_preference_list: "SHA512 SHA384 SHA256 AES256 AES192 AES ZLIB ZIP Uncompressed"
+
+# Certificate digest algorithm
+gpg_cert_digest_algo: "SHA512"
+
+# =============================================================================
+# SECURITY HARDENING
+# =============================================================================
+# Disable weak/deprecated algorithms
+gpg_weak_digest: "SHA1"
+gpg_disable_cipher: [] # Example: ["IDEA", "3DES", "CAST5"]
+
+# Passphrase protection (S2K - String-to-Key)
+gpg_s2k_cipher_algo: "AES256" # Cipher for passphrase encryption
+gpg_s2k_digest_algo: "SHA512" # Digest for passphrase hashing
+gpg_s2k_mode: 3 # Mode 3: salted + iterated
+gpg_s2k_count: 65011712 # Maximum iteration count (passphrase stretching)
+
+# Additional security options
+gpg_require_cross_certification: true # Require subkey cross-certification
+gpg_no_symkey_cache: false # Disable symmetric key caching
+
+# =============================================================================
+# TRUST MODEL
+# =============================================================================
+gpg_trust_model: "tofu+pgp" # Trust model: tofu+pgp > pgp alone
+gpg_tofu_default_policy: "good" # Default TOFU policy for new keys
+
+# =============================================================================
+# DISPLAY & PRIVACY OPTIONS
+# =============================================================================
+# Display settings
+gpg_charset: "utf-8"
+gpg_keyid_format: "0xlong" # Show long key IDs
+gpg_with_fingerprint: true # Always show fingerprints
+
+gpg_list_options:
+  - "show-uid-validity"
+
+gpg_verify_options:
+  - "show-uid-validity"
+
+# Privacy settings
+gpg_no_emit_version: true # Don't include GPG version in output
+gpg_no_comments: true # Don't include comments in output
+
+gpg_import_options:
+  - "import-clean" # Remove unusable signatures on import
+  - "repair-keys" # Fix broken keys on import
+
+gpg_export_options:
+  - "export-clean" # Remove unusable signatures on export
+  - "export-minimal" # Minimize exported key size
+
+# =============================================================================
+# GPG AGENT CONFIGURATION
+# =============================================================================
+# Cache timeout settings (in seconds)
+gpg_agent_default_cache_ttl: 300 # 5 minutes (down from 600s default)
+gpg_agent_max_cache_ttl: 1800 # 30 minutes (down from 7200s default)
+gpg_agent_default_cache_ttl_ssh: 300 # 5 minutes for SSH keys
+gpg_agent_max_cache_ttl_ssh: 1800 # 30 minutes for SSH keys
+
+# Passphrase security constraints
+gpg_agent_enforce_passphrase_constraints: true # Prevent bypassing passphrase rules
+gpg_agent_min_passphrase_len: 12 # Minimum passphrase length (more secure than default 8)
+gpg_agent_min_passphrase_nonalpha: 2 # Minimum special chars/digits required
+gpg_agent_max_passphrase_days: 365 # Force passphrase change after 1 year
+
+# Additional security hardening
+gpg_agent_no_allow_external_cache: true # Prevent external passphrase caching
+gpg_agent_grab: true # Grab keyboard/mouse to prevent X-sniffing attacks

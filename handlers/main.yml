@@ -1,0 +1,6 @@
+---
+- name: Reload gpg-agent
+  ansible.builtin.command: gpgconf --kill gpg-agent
+  become: true
+  become_user: "{{ ansible_user }}"
+  changed_when: true

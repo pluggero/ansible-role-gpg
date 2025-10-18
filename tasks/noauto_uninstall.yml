@@ -1,0 +1,20 @@
+---
+- name: Uninstall current installation of gpg
+  block:
+    - name: Uninstall gpg OS-specifically from package manager
+      ansible.builtin.include_tasks: "{{ task_file }}"
+      with_first_found:
+        - "{{ role_path }}/tasks/noauto_uninstall_{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ role_path }}/tasks/noauto_uninstall_{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ role_path }}/tasks/noauto_uninstall_{{ ansible_distribution }}.yml"
+        - "{{ role_path }}/tasks/noauto_uninstall_{{ ansible_os_family }}.yml"
+        - "{{ role_path }}/tasks/noauto_uninstall_{{ ansible_lsb.id }}.yml"
+      loop_control:
+        loop_var: task_file
+
+    - name: Import installed gpg version check
+      ansible.builtin.include_tasks: noauto_check_installed_version.yml
+
+    # - name: Uninstall gpg from source
+    #   ansible.builtin.include_tasks: noauto_uninstall_source.yml
+    #   when: gpg_installed_version is defined and gpg_installed_version != ""

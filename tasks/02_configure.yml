@@ -1,0 +1,28 @@
+---
+- name: Configure gpg
+  block:
+    - name: Ensure config folder exists
+      ansible.builtin.file:
+        path: "{{ gpg_config_dir }}"
+        state: directory
+        mode: "0700"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Add gpg config file
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/gpg.conf.j2"
+        dest: "{{ gpg_config_file }}"
+        mode: "0600"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      notify: Reload gpg-agent
+
+    - name: Add gpg-agent config file
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/gpg-agent.conf.j2"
+        dest: "{{ gpg_agent_config_file }}"
+        mode: "0600"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+      notify: Reload gpg-agent

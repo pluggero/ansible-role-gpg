@@ -1,0 +1,120 @@
+# {{ ansible_managed }}
+# GPG Configuration
+
+# =============================================================================
+# KEY DISCOVERY & RETRIEVAL
+# =============================================================================
+{% if gpg_keyserver is defined %}
+keyserver {{ gpg_keyserver }}
+{% endif %}
+{% if gpg_keyserver_options is defined and gpg_keyserver_options | length > 0 %}
+keyserver-options {{ gpg_keyserver_options | join(' ') }}
+{% endif %}
+{% if gpg_auto_key_retrieve is defined and gpg_auto_key_retrieve %}
+auto-key-retrieve
+{% endif %}
+{% if gpg_auto_key_locate is defined and gpg_auto_key_locate | length > 0 %}
+auto-key-locate {{ gpg_auto_key_locate | join(',') }}
+{% endif %}
+
+# =============================================================================
+# CRYPTOGRAPHIC PREFERENCES
+# =============================================================================
+{% if gpg_personal_cipher_preferences is defined %}
+personal-cipher-preferences {{ gpg_personal_cipher_preferences }}
+{% endif %}
+{% if gpg_personal_digest_preferences is defined %}
+personal-digest-preferences {{ gpg_personal_digest_preferences }}
+{% endif %}
+{% if gpg_personal_compress_preferences is defined %}
+personal-compress-preferences {{ gpg_personal_compress_preferences }}
+{% endif %}
+{% if gpg_default_preference_list is defined %}
+default-preference-list {{ gpg_default_preference_list }}
+{% endif %}
+
+# =============================================================================
+# CERTIFICATE DIGEST
+# =============================================================================
+{% if gpg_cert_digest_algo is defined %}
+cert-digest-algo {{ gpg_cert_digest_algo }}
+{% endif %}
+
+# =============================================================================
+# DISABLE WEAK ALGORITHMS
+# =============================================================================
+{% if gpg_weak_digest is defined %}
+weak-digest {{ gpg_weak_digest }}
+{% endif %}
+{% if gpg_disable_cipher is defined and gpg_disable_cipher | length > 0 %}
+{% for cipher in gpg_disable_cipher %}
+disable-cipher-algo {{ cipher }}
+{% endfor %}
+{% endif %}
+
+# =============================================================================
+# PASSPHRASE HARDENING (STRING-TO-KEY)
+# =============================================================================
+{% if gpg_s2k_mode is defined %}
+s2k-mode {{ gpg_s2k_mode }}
+{% endif %}
+{% if gpg_s2k_digest_algo is defined %}
+s2k-digest-algo {{ gpg_s2k_digest_algo }}
+{% endif %}
+{% if gpg_s2k_cipher_algo is defined %}
+s2k-cipher-algo {{ gpg_s2k_cipher_algo }}
+{% endif %}
+{% if gpg_s2k_count is defined %}
+s2k-count {{ gpg_s2k_count }}
+{% endif %}
+
+# =============================================================================
+# DISPLAY & UX OPTIONS
+# =============================================================================
+{% if gpg_charset is defined %}
+charset {{ gpg_charset }}
+{% endif %}
+{% if gpg_keyid_format is defined %}
+keyid-format {{ gpg_keyid_format }}
+{% endif %}
+{% if gpg_with_fingerprint is defined and gpg_with_fingerprint %}
+with-fingerprint
+{% endif %}
+{% if gpg_list_options is defined and gpg_list_options | length > 0 %}
+list-options {{ gpg_list_options | join(',') }}
+{% endif %}
+{% if gpg_verify_options is defined and gpg_verify_options | length > 0 %}
+verify-options {{ gpg_verify_options | join(',') }}
+{% endif %}
+{% if gpg_no_emit_version is defined and gpg_no_emit_version %}
+no-emit-version
+{% endif %}
+{% if gpg_no_comments is defined and gpg_no_comments %}
+no-comments
+{% endif %}
+{% if gpg_import_options is defined and gpg_import_options | length > 0 %}
+import-options {{ gpg_import_options | join(',') }}
+{% endif %}
+{% if gpg_export_options is defined and gpg_export_options | length > 0 %}
+export-options {{ gpg_export_options | join(',') }}
+{% endif %}
+
+# =============================================================================
+# SECURITY & HYGIENE
+# =============================================================================
+{% if gpg_require_cross_certification is defined and gpg_require_cross_certification %}
+require-cross-certification
+{% endif %}
+{% if gpg_no_symkey_cache is defined and gpg_no_symkey_cache %}
+no-symkey-cache
+{% endif %}
+
+# =============================================================================
+# TRUST MODEL
+# =============================================================================
+{% if gpg_trust_model is defined %}
+trust-model {{ gpg_trust_model }}
+{% endif %}
+{% if gpg_tofu_default_policy is defined %}
+tofu-default-policy {{ gpg_tofu_default_policy }}
+{% endif %}

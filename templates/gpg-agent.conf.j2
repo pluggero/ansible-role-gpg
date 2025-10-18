@@ -1,0 +1,50 @@
+# {{ ansible_managed }}
+# GPG Agent Configuration
+
+# =============================================================================
+# SECURITY HARDENING
+# =============================================================================
+# Prevent X-sniffing attacks by grabbing keyboard/mouse
+{% if gpg_agent_grab %}
+grab
+{% endif %}
+
+# Prevent external passphrase caching (e.g., by desktop environments)
+{% if gpg_agent_no_allow_external_cache %}
+no-allow-external-cache
+{% endif %}
+
+# =============================================================================
+# PINENTRY CONFIGURATION
+# =============================================================================
+pinentry-program {{ gpg_pinentry_bin }}
+
+# =============================================================================
+# CACHE TIMEOUT SETTINGS
+# =============================================================================
+# Default cache entry validity time (in seconds)
+default-cache-ttl {{ gpg_agent_default_cache_ttl }}
+
+# Maximum cache entry lifetime (in seconds)
+max-cache-ttl {{ gpg_agent_max_cache_ttl }}
+
+# Cache timeout for SSH keys (if SSH emulation is enabled)
+default-cache-ttl-ssh {{ gpg_agent_default_cache_ttl_ssh }}
+max-cache-ttl-ssh {{ gpg_agent_max_cache_ttl_ssh }}
+
+# =============================================================================
+# PASSPHRASE SECURITY CONSTRAINTS
+# =============================================================================
+# Enforce passphrase constraints (prevent bypassing with "Take it anyway")
+{% if gpg_agent_enforce_passphrase_constraints %}
+enforce-passphrase-constraints
+{% endif %}
+
+# Minimum passphrase length
+min-passphrase-len {{ gpg_agent_min_passphrase_len }}
+
+# Minimum number of non-alphabetic characters (digits/special chars)
+min-passphrase-nonalpha {{ gpg_agent_min_passphrase_nonalpha }}
+
+# Force passphrase change after N days
+max-passphrase-days {{ gpg_agent_max_passphrase_days }}

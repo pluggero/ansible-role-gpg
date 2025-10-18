@@ -1,0 +1,8 @@
+---
+gpg_dep_pkgs:
+  - pinentry
+
+gpg_distro_pkgs:
+  - gnupg
+
+gpg_pinentry_bin: /usr/bin/pinentry-tty

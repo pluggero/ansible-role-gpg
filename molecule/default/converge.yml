@@ -1,0 +1,31 @@
+---
+- name: Converge
+  hosts: all
+
+  vars:
+    ansible_user: ansible
+    ansible_become_password: ansible
+
+  pre_tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+      when: ansible_os_family == 'Debian'
+
+    - name: Wait for systemd to complete initialization
+      ansible.builtin.command: systemctl is-system-running # noqa: command-instead-of-module
+      register: systemctl_status
+      until: >
+        'running' in systemctl_status.stdout or
+        'degraded' in systemctl_status.stdout
+      retries: 30
+      delay: 5
+      when: ansible_service_mgr == 'systemd'
+      changed_when: false
+      failed_when: systemctl_status.rc > 1
+      become: true
+
+  roles:
+    - role: pluggero.gpg
