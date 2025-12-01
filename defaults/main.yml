@@ -82,6 +82,9 @@ gpg_export_options:
 # =============================================================================
 # GPG AGENT CONFIGURATION
 # =============================================================================
+# Pinentry program
+gpg_pinentry_bin: /usr/bin/pinentry-tty
+
 # Cache timeout settings (in seconds)
 gpg_agent_default_cache_ttl: 300 # 5 minutes (down from 600s default)
 gpg_agent_max_cache_ttl: 1800 # 30 minutes (down from 7200s default)

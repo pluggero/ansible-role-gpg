@@ -4,5 +4,3 @@ gpg_dep_pkgs:
 
 gpg_distro_pkgs:
   - gnupg
-
-gpg_pinentry_bin: /usr/bin/pinentry-tty
